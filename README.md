@@ -38,6 +38,8 @@ optional arguments:
                    "name", "url", "icon"]
 ```
 
+Check [`nativefier` docs](https://github.com/jiahaog/nativefier/blob/master/docs/api.md#command-line) for more details.
+
 config.yml example
 ------------------
 

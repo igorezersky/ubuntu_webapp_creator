@@ -5,7 +5,6 @@ from pathlib import Path
 
 from ruamel.yaml import YAML
 
-
 DESKTOP_FILE_TEMPLATE = """
 [Desktop Entry]
 Version=1.0
@@ -18,7 +17,7 @@ Icon={icon}
 """
 
 NATIVEFIER_TEMPLATE = """
-nativefier -p linux -a x64 --name "{name}" "{url}" --flash --maximize
+nativefier -p linux -a x64 --internal-urls ".*?.{domain}.*?" {others} --name "{name}" "{url}" --flash --maximize
 """
 
 
@@ -43,7 +42,16 @@ if __name__ == '__main__':
     icon_path = Path(f'{exec_path.parent}/resources/app/icon.png')
     app_dir_path.mkdir(exist_ok=True, parents=True)
 
-    command = NATIVEFIER_TEMPLATE.format(name=configs['name'], url=configs['url'])
+    others = []
+    shortcuts_path = Path(configs['shortcuts'])
+    if shortcuts_path.exists():
+        others.append(f'--global-shortcuts {shortcuts_path}')
+    command = NATIVEFIER_TEMPLATE.format(
+        name=configs['name'],
+        url=configs['url'],
+        domain=configs['domain'],
+        others=' '.join(others)
+    )
     os.system(f'cd {app_dir_path} && {command}')
 
     shutil.copy(configs['icon'], icon_path)
